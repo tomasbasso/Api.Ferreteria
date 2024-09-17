@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<StoreDbContext>(x => 
+builder.Services.AddDbContext<FerreteriaContext>(x => 
     x.UseSqlServer(builder.Configuration.GetConnectionString("SqlLocal")));
 
 builder.Services.AddControllers();
