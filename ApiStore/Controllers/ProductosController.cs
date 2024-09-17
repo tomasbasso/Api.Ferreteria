@@ -9,42 +9,44 @@ namespace ApiStore.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+
 public class ProductosController : ControllerBase
-{ }
-//    private readonly StoreDbContext _context;
+{
+    private readonly FerreteriaContext _context;
 
-//    public ProductosController(StoreDbContext context)
-//    {
-//        _context = context;
-//    }
+    public ProductosController(FerreteriaContext context)
+    {
+        _context = context;
+    }
 
-//    [HttpGet(Name = "ObtenerTodos")]
-//    public async Task<IActionResult> ObtenerTodos()
-//    {
-//        try
-//        {
-//            var lista = await _context.Productos.ToListAsync();
-//            return Ok(lista);
-//        }
-//        catch (Exception ex)
-//        {
-//            return BadRequest(ex.Message);
-//        }
-//    }
+    [HttpGet(Name = "ObtenerTodosProductos")]
+    public async Task<IActionResult> ObtenerTodos()
+    {
+        try
+        {
+            var lista = await _context.Producto.ToListAsync();
+            return Ok(lista);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
-//    [HttpGet("ObtenerPorId/{productoId:int}")]
-//    public async Task<IActionResult> ObtenerPorId([FromRoute(Name = "productoId")] int id)
-//    {
-//        try
-//        {
-//            var item = await _context.Productos.FindAsync(id);
-//            return Ok(item);
-//        }
-//        catch (Exception ex)
-//        {
-//            return BadRequest(ex.Message);
-//        }
-//    }
+    [HttpGet("ObtenerPorId/{producto_id:int}")]
+    public async Task<IActionResult> ObtenerPorId([FromRoute(Name = "producto_id")] int id)
+    {
+        try
+        {
+            var item = await _context.Producto.FindAsync(id);
+            return Ok(item);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+}
 
 //    [HttpPost]
 //    public async Task<IActionResult> Crear([FromBody] Producto producto)
@@ -74,7 +76,7 @@ public class ProductosController : ControllerBase
 //                _context.Productos.Remove(productoExistente);
 //                await _context.SaveChangesAsync();
 //            }
-                
+
 
 //            return NoContent();
 //        }

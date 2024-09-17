@@ -12,9 +12,8 @@ namespace ApiStore.Models
         public string rol { get; set; }
         public string contraseña { get; set; }
 
-
-        // Relación con pedidos
-        //public ICollection<Pedido> Pedidos { get; set; }
+        // Relación con Pedido
+        public ICollection<Pedido> Pedidos { get; set; }
     }
 
 }
