@@ -12,11 +12,11 @@ namespace ApiStore.Models
 
         // Relación con Categoria
         public int categoria_id { get; set; }
-        public Categoria Categoria { get; set; }
+        //public Categoria Categoria { get; set; }
 
         public string marca { get; set; }
 
         // Relación con DetallePedido
-        public ICollection<DetallePedido> DetallesPedido { get; set; }
+        //public ICollection<DetallePedido> DetallesPedido { get; set; }
     }
 }

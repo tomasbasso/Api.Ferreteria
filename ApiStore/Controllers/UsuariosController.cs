@@ -17,13 +17,21 @@ namespace ApiStore.Controllers
         {
             _context=context;
         }
-        ////////BUSCAR TODOS//////////////////////////
+        ////////BUSCAR TODOS//////////////////////////AUTOMAPER
         [HttpGet(Name = "ObtenerTodos")]
-            public async Task<IActionResult> ObtenerTodos()
+        public async Task<IActionResult> ObtenerTodos()
         {
             try
             {
-                var lista = await _context.Usuario.ToListAsync();
+                var lista = await _context.Usuario.Select(u => new UsuarioListaDTO
+                    {
+                        usuario_id = u.usuario_id,
+                        nombre = u.nombre,
+                        email = u.email,
+                        direccion = u.direccion,
+                        rol = u.rol
+                    })
+                    .ToListAsync();
                 return Ok(lista);
             }
             catch (Exception ex)

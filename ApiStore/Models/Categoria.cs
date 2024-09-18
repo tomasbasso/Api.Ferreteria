@@ -8,6 +8,6 @@ namespace ApiStore.Models
         public string nombre { get; set; }
 
         // Relación con Productos
-        public ICollection<Producto> Productos { get; set; }
+        //public ICollection<Producto> Productos { get; set; }
     }
 }

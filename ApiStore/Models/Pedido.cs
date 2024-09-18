@@ -8,12 +8,12 @@ namespace ApiStore.Models
 
         // Relación con Usuario
         public int usuario_id { get; set; }
-        public Usuario Usuario { get; set; }
+        //public Usuario Usuario { get; set; }
 
         public decimal precio_total { get; set; }
         public DateTime fecha { get; set; }
 
         // Relación con DetallePedido
-        public ICollection<DetallePedido> DetallesPedido { get; set; }
+        //public ICollection<DetallePedido> DetallesPedido { get; set; }
     }
 }
