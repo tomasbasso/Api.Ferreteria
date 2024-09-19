@@ -55,7 +55,7 @@ namespace ApiStore.Controllers
         }
         ///////AGREGAR//////////////////////////NO ANDA
         [HttpPost]
-        public async Task<IActionResult> Crear([FromBody] Usuario usuario)
+        public async Task<IActionResult> Crear(Usuario usuario)
         {
             try
             {
@@ -66,8 +66,35 @@ namespace ApiStore.Controllers
             }
             catch (Exception ex)
             {
+                return BadRequest(new
+                {
+                    error = ex.Message,
+                    innerException = ex.InnerException?.Message
+                });
+            }
+        }
+        //////////BORRAR//////////
+        [HttpDelete("{usuario_id:int}")]
+        public async Task<IActionResult> Borrar([FromRoute] int usuario_id)
+        {
+            try
+            {
+                var usuarioExistente = await _context.Usuario.FindAsync(usuario_id);
+
+                if (usuarioExistente != null)
+                {
+                    _context.Usuario.Remove(usuarioExistente);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }
