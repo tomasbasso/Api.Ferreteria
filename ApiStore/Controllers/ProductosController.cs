@@ -46,6 +46,78 @@ public class ProductosController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Crear(Producto producto)
+    {
+        try
+        {
+            await _context.Producto.AddAsync(producto);
+            var result = await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                error = ex.Message,
+                innerException = ex.InnerException?.Message
+            });
+        }
+    }
+    //////////BORRAR//////////
+    [HttpDelete("{producto_id:int}")]
+    public async Task<IActionResult> Borrar([FromRoute] int producto_id)
+    {
+        try
+        {
+            var productoExistente = await _context.Producto.FindAsync(producto_id);
+
+            if (productoExistente != null)
+            {
+                _context.Producto.Remove(productoExistente);
+                await _context.SaveChangesAsync();
+            }
+
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    [HttpPut("{producto_id:int}")]
+    public async Task<IActionResult> Modificar([FromBody] Producto producto, [FromRoute] int producto_id)
+    {
+        try
+        {
+            var productoExistente = await _context.Producto.FindAsync(producto_id);
+
+            if (productoExistente != null)
+            {
+                if (!producto.nombre.IsNullOrEmpty()) productoExistente.nombre = producto.nombre;
+                if (!producto.descripcion.IsNullOrEmpty()) productoExistente.descripcion = producto.descripcion;
+                if (producto.precio!=null) productoExistente.precio = producto.precio;
+                if (producto.stock != null) productoExistente.stock = producto.stock;
+                
+
+
+                _context.Producto.Update(productoExistente);
+                await _context.SaveChangesAsync();
+            }
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+    }
+
+
 }
 
 //    [HttpPost]
