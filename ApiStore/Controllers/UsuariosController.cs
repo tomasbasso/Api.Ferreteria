@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ApiStore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ApiStore.ModelsDTO;
 
 namespace ApiStore.Controllers
 {
@@ -56,12 +57,23 @@ namespace ApiStore.Controllers
         }
         ///////AGREGAR//////////////////////////NO ANDA
         [HttpPost]
-        public async Task<IActionResult> Crear(Usuario usuario)
+        public async Task<IActionResult> Crear(CrearUsuarioDTO usuarioDto)
         {
             try
             {
+                // Mapea el DTO a la entidad Usuario
+                var usuario = new Usuario
+                {
+                   
+                    nombre = usuarioDto.nombre,
+                    email = usuarioDto.email,
+                    direccion = usuarioDto.direccion,
+                    rol = usuarioDto.rol,
+                    contraseña = usuarioDto.contraseña 
+                };
+
                 await _context.Usuario.AddAsync(usuario);
-                var result = await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 return Ok();
             }
