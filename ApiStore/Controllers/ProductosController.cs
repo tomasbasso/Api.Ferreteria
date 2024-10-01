@@ -116,6 +116,26 @@ public class ProductosController : ControllerBase
         }
 
     }
+    [HttpPost("GuardarImagen")]
+    public async Task<string> GuardarImagen([FromForm] SubirImagen archivo)
+    {
+        var ruta = String.Empty;
+
+        if (archivo.imagen.Length > 0)
+        {
+            var nombreImagen = Guid.NewGuid().ToString() + ".jpg";
+            ruta = $"Imagenes/{nombreImagen}";
+            using (var stream = new FileStream(ruta, FileMode.Create))
+            {
+                await archivo.imagen.CopyToAsync(stream);
+
+            }
+        }
+
+
+        return ruta;
+
+    }
 
 
 }

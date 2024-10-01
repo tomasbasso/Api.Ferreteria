@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 namespace ApiStore.Models
 {
     public class Producto
@@ -15,6 +16,9 @@ namespace ApiStore.Models
         //public Categoria Categoria { get; set; }
 
         public string marca { get; set; }
+
+        public byte[] imagen { get; set; }
+
 
         // Relación con DetallePedido
         //public ICollection<DetallePedido> DetallesPedido { get; set; }
