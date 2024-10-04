@@ -55,7 +55,7 @@ namespace ApiStore.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        ///////AGREGAR//////////////////////////NO ANDA
+   
         [HttpPost]
         public async Task<IActionResult> Crear(CrearUsuarioDTO usuarioDto)
         {
@@ -136,5 +136,32 @@ namespace ApiStore.Controllers
             }
 
         }
+        [HttpPost("ValidarCredencial")]
+        public async Task<IActionResult> ValidarCredencial([FromBody] UsuarioLoginDTO usuario)
+        {
+            // Buscar usuario con las credenciales proporcionadas
+            var usuarioLogin = await _context.Usuario
+                .FirstOrDefaultAsync(x => x.email == usuario.email && x.contraseña == usuario.contraseña);
+
+            if (usuarioLogin == null)
+            {
+                // Si no se encuentra el usuario, retornar un mensaje de error
+                return NotFound("Usuario o contraseña incorrectos");
+            }
+
+            // Crear una respuesta con los datos del usuario autenticado
+            UsuarioListaDTO usuarioResponse = new UsuarioListaDTO()
+            {
+                usuario_id = usuarioLogin.usuario_id,
+                nombre = usuarioLogin.nombre,
+                email = usuarioLogin.email,
+                direccion = usuarioLogin.direccion,
+                rol = usuarioLogin.rol
+            };
+
+            // Retornar la respuesta con los datos del usuario
+            return Ok(usuarioResponse);
+        }
     }
 }
+
