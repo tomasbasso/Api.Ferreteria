@@ -136,5 +136,29 @@ namespace ApiStore.Controllers
             }
 
         }
+        [HttpGet("LoginDatos", Name = "ObtenerLoginDatos")]
+        public async Task<IActionResult> ObtenerLoginDatos()
+        {
+            try
+            {
+                var lista = await _context.Usuario.Select(u => new UsuarioLoginDTO
+                {
+                    email = u.email,
+                    contraseña = u.contraseña
+                })
+                .ToListAsync();
+
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+
+
     }
 }
