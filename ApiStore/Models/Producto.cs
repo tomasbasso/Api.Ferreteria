@@ -17,7 +17,7 @@ namespace ApiStore.Models
 
         public string marca { get; set; }
 
-        public byte[] imagen { get; set; }
+        public string imagen { get; set; }
 
 
         // Relación con DetallePedido
