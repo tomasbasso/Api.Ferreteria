@@ -139,24 +139,24 @@ namespace ApiStore.Controllers
         [HttpPost("ValidarCredencial")]
         public async Task<IActionResult> ValidarCredencial([FromBody] UsuarioLoginDTO usuario)
         {
-            // Buscar usuario con las credenciales proporcionadas
-            var usuarioLogin = await _context.Usuario
-                .FirstOrDefaultAsync(x => x.email == usuario.email && x.contraseña == usuario.contraseña);
+            var existeLogin = await _context.Usuario
+            .AnyAsync(x => x.email.Equals(usuario.email) && x.contraseña.Equals(usuario.contraseña));
 
-            if (usuarioLogin == null)
+            Usuario usuarioLogin = await _context.Usuario.FirstOrDefaultAsync(x => x.email.Equals(usuario.email) && x.contraseña.Equals(usuario.contraseña));
+
+            if (existeLogin == null)
             {
                 // Si no se encuentra el usuario, retornar un mensaje de error
                 return NotFound("Usuario o contraseña incorrectos");
             }
 
             // Crear una respuesta con los datos del usuario autenticado
-            UsuarioListaDTO usuarioResponse = new UsuarioListaDTO()
+            LoginResponseDto usuarioResponse = new LoginResponseDto()
             {
-                usuario_id = usuarioLogin.usuario_id,
-                nombre = usuarioLogin.nombre,
-                email = usuarioLogin.email,
-                direccion = usuarioLogin.direccion,
-                rol = usuarioLogin.rol
+                usuario_id = existeLogin ? usuarioLogin.usuario_id : 0,
+                nombre = existeLogin ? usuarioLogin.nombre : "",
+                email = existeLogin? usuarioLogin.email:""
+             
             };
 
             // Retornar la respuesta con los datos del usuario
