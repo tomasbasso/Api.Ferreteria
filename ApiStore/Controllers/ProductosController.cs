@@ -67,7 +67,7 @@ public class ProductosController : ControllerBase
                 descripcion = productoDto.descripcion,
                 precio = productoDto.precio,
                 stock = productoDto.stock,
-                categoria_id = productoDto.categoria_id, // Asegúrate de incluir esto
+                categoria_id = productoDto.categoria_id, 
                 marca = productoDto.marca,
                 imagen = productoDto.imagen
             };
@@ -109,6 +109,8 @@ public class ProductosController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+
     [HttpPut("{producto_id:int}")]
     public async Task<IActionResult> Modificar([FromBody] Producto producto, [FromRoute] int producto_id)
     {
@@ -116,27 +118,36 @@ public class ProductosController : ControllerBase
         {
             var productoExistente = await _context.Producto.FindAsync(producto_id);
 
-            if (productoExistente != null)
+            if (productoExistente == null)
             {
-                if (!producto.nombre.IsNullOrEmpty()) productoExistente.nombre = producto.nombre;
-                if (!producto.descripcion.IsNullOrEmpty()) productoExistente.descripcion = producto.descripcion;
-                if (producto.precio!=null) productoExistente.precio = producto.precio;
-                if (producto.stock != null) productoExistente.stock = producto.stock;
-                
-
-
-                _context.Producto.Update(productoExistente);
-                await _context.SaveChangesAsync();
+                return NotFound(new { error = "Producto no encontrado." });
             }
 
-            return NoContent();
+           
+            if (!string.IsNullOrEmpty(producto.nombre))
+                productoExistente.nombre = producto.nombre;
+            if (!string.IsNullOrEmpty(producto.descripcion))
+                productoExistente.descripcion = producto.descripcion;
+            if (producto.precio != default) 
+                productoExistente.precio = producto.precio;
+            if (producto.stock >= 0) 
+                productoExistente.stock = producto.stock;
+            if (!string.IsNullOrEmpty(producto.marca))
+                productoExistente.marca = producto.marca;
+            if (!string.IsNullOrEmpty(producto.imagen))
+                productoExistente.imagen = producto.imagen;
+
+            _context.Producto.Update(productoExistente);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); 
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { error = ex.Message });
         }
-
     }
+
     [HttpPost("GuardarImagen")]
     public async Task<string> GuardarImagen([FromForm] SubirImagen archivo)
     {
@@ -157,6 +168,8 @@ public class ProductosController : ControllerBase
         return ruta;
 
     }
+
+
 
 
 }
