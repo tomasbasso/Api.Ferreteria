@@ -1,5 +1,6 @@
 ﻿using ApiStore.Data;
 using ApiStore.Models;
+using ApiStore.ModelsDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,12 +49,31 @@ public class ProductosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Crear(Producto producto)
+    public async Task<IActionResult> Crear(CrearProductoDTO productoDto)
     {
         try
         {
+            // Verifica si la categoría existe
+            var categoriaExists = await _context.Categoria.AnyAsync(c => c.categoria_id == productoDto.categoria_id);
+            if (!categoriaExists)
+            {
+                return BadRequest(new { error = "La categoría especificada no existe." });
+            }
+
+            // Mapea el DTO a la entidad Producto
+            var producto = new Producto
+            {
+                nombre = productoDto.nombre,
+                descripcion = productoDto.descripcion,
+                precio = productoDto.precio,
+                stock = productoDto.stock,
+                categoria_id = productoDto.categoria_id, // Asegúrate de incluir esto
+                marca = productoDto.marca,
+                imagen = productoDto.imagen
+            };
+
             await _context.Producto.AddAsync(producto);
-            var result = await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
@@ -66,6 +86,7 @@ public class ProductosController : ControllerBase
             });
         }
     }
+
     //////////BORRAR//////////
     [HttpDelete("{producto_id:int}")]
     public async Task<IActionResult> Borrar([FromRoute] int producto_id)
